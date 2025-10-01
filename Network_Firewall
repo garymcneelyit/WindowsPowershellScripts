@@ -1,0 +1,11 @@
+# Get IP configuration
+Get-NetIPAddress
+
+# Test network connectivity
+Test-NetConnection google.com -Port 80
+
+# Enable firewall
+Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled True
+
+# Allow RDP through firewall
+Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
