@@ -1,0 +1,11 @@
+# List local users
+Get-LocalUser
+
+# Create a new local user
+New-LocalUser -Name "TestUser" -Password (Read-Host -AsSecureString "Enter Password")
+
+# Add user to Administrators group
+Add-LocalGroupMember -Group "Administrators" -Member "TestUser"
+
+# Disable a user
+Disable-LocalUser -Name "TestUser"
