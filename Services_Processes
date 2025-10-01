@@ -1,0 +1,8 @@
+# List all running services
+Get-Service | Where-Object {$_.Status -eq "Running"}
+
+# Restart a service
+Restart-Service -Name "Spooler"
+
+# Kill a process
+Stop-Process -Name "notepad" -Force
