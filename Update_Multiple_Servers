@@ -1,0 +1,51 @@
+#Install the PSWindowsUpdate module on your local admin machine (or the machine running the script):
+
+#Install-Module -Name PSWindowsUpdate -Force -Scope CurrentUser
+
+
+#Ensure PowerShell Remoting (WinRM) is enabled on all target servers:
+
+#Enable-PSRemoting -Force
+
+#Make sure your account has admin privileges on all servers.
+
+# List of servers to update
+$Servers = @("Server01", "Server02", "Server03")
+
+# Log file
+$LogFile = "C:\Temp\WindowsUpdate_Log.txt"
+
+# Credentials (optional prompt)
+$Cred = Get-Credential -Message "Enter admin credentials for target servers"
+
+foreach ($Server in $Servers) {
+    try {
+        Write-Host "=== Updating $Server ===" -ForegroundColor Cyan
+
+        # Invoke commands remotely
+        Invoke-Command -ComputerName $Server -Credential $Cred -ScriptBlock {
+            Import-Module PSWindowsUpdate
+            Write-Host "Checking for updates on $env:COMPUTERNAME..."
+            
+            # Get list of available updates
+            $updates = Get-WindowsUpdate -MicrosoftUpdate -AcceptAll -IgnoreReboot
+            
+            if ($updates) {
+                Write-Host "Installing updates..."
+                # Install updates and automatically reboot if needed
+                Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -AutoReboot -IgnoreReboot
+                Write-Host "Updates installed successfully."
+            } else {
+                Write-Host "No updates available."
+            }
+        } -ErrorAction Stop
+
+        Add-Content -Path $LogFile -Value "$(Get-Date) : $Server - Updates applied successfully."
+    } 
+    catch {
+        Write-Host "Error updating $Server: $_" -ForegroundColor Red
+        Add-Content -Path $LogFile -Value "$(Get-Date) : $Server - ERROR: $_"
+    }
+}
+
+Write-Host "=== Update process complete. See log: $LogFile ===" -ForegroundColor Green
