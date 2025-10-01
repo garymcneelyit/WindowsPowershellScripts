@@ -1,0 +1,11 @@
+# Get computer info
+Get-ComputerInfo
+
+# Check uptime
+(Get-CimInstance Win32_OperatingSystem).LastBootUpTime
+
+# List running processes (top 10 by memory)
+Get-Process | Sort-Object WS -Descending | Select-Object -First 10
+
+# Check disk usage
+Get-PSDrive -PSProvider FileSystem
