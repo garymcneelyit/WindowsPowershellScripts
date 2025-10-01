@@ -1,0 +1,10 @@
+#Requires PSWindowsUpdate module
+
+# Install module (run once)
+Install-Module -Name PSWindowsUpdate -Force -Scope CurrentUser
+
+# Check for updates
+Get-WindowsUpdate
+
+# Install all updates
+Install-WindowsUpdate -AcceptAll -AutoReboot
